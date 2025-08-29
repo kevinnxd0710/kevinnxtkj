@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rangkuman TKJ</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --bg2: #0d1328;
+        --card: #111936;
+        --muted: #8fa3c9;
+        --text: #e6eeff;
+        --pri: #5b8cff;
+        --pri-2: #7aa2ff;
+        --acc: #32d6a1;
+        --warn: #ffb86b;
+        --danger: #ff6b6b;
+        --glass: rgba(255, 255, 255, 0.06);
+        --radius: 22px;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.35),
+          inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto,
+          Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--text);
+        background: radial-gradient(
+            1200px 600px at 10% -10%,
+            #23305c 0%,
+            transparent 50%
+          ),
+          radial-gradient(1000px 800px at 100% 0%, #1b2447 0%, transparent 50%),
+          linear-gradient(180deg, var(--bg), var(--bg2));
+        background-attachment: fixed;
+      }
+      a {
+        color: inherit;
+      }
+
+      /* Utilities */
+      .container {
+        max-width: 1100px;
+        margin-inline: auto;
+        padding: 24px;
+      }
+      .hidden {
+        display: none !important;
+      }
+      .row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      @media (max-width: 900px) {
+        .grid-3 {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 640px) {
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Glass card */
+      .card {
+        background: var(--glass);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(8px);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+      .card .head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .card .body {
+        padding: 18px 20px;
+      }
+
+      /* Buttons */
+      .btn {
+        appearance: none;
+        border: 1px solid transparent;
+        border-radius: 14px;
+        padding: 10px 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s transform ease, 0.3s background-color ease,
+          0.3s box-shadow ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .btn.primary {
+        background: linear-gradient(135deg, var(--pri), var(--pri-2));
+        color: #0b1020;
+        box-shadow: 0 8px 16px rgba(91, 140, 255, 0.35);
+      }
+      .btn.ghost {
+        background: transparent;
+        border-color: rgba(255, 255, 255, 0.12);
+        color: var(--text);
+      }
+      .btn.warn {
+        background: linear-gradient(135deg, #ffd27a, var(--warn));
+        color: #1d1400;
+      }
+      .btn.danger {
+        background: linear-gradient(135deg, #ff9a9a, var(--danger));
+        color: #2d0b0b;
+      }
+      .btn.small {
+        padding: 8px 10px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+      }
+
+      /* Inputs */
+      label {
+        font-size: 0.9rem;
+        color: var(--muted);
+        display: block;
+        margin-bottom: 6px;
+      }
+      .input,
+      select,
+      textarea {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--text);
+        padding: 12px 14px;
+        border-radius: 14px;
+        outline: none;
+        transition: border 0.2s ease, box-shadow 0.2s ease;
+      }
+      .input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: var(--pri);
+        box-shadow: 0 0 0 3px rgba(91, 140, 255, 0.25);
+      }
+      textarea {
+        min-height: 140px;
+        resize: vertical;
+      }
+
+      /* Header */
+      .appbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: linear-gradient(
+          180deg,
+          rgba(6, 10, 24, 0.85),
+          rgba(6, 10, 24, 0.4)
+        );
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .appbar .inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 24px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: conic-gradient(
+          from 200deg at 50% 50%,
+          var(--pri),
+          var(--acc),
+          var(--pri)
+        );
+        box-shadow: 0 6px 18px rgba(50, 214, 161, 0.35);
+      }
+      .title {
+        font-weight: 800;
+        letter-spacing: 0.3px;
+      }
+
+      /* Login */
+      .center {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      .login-card {
+        max-width: 420px;
+        width: 100%;
+        overflow: hidden;
+      }
+      .login-hero {
+        position: relative;
+        height: 120px;
+        background: radial-gradient(
+            100% 100% at 0% 0%,
+            rgba(91, 140, 255, 0.35) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            100% 100% at 100% 0%,
+            rgba(50, 214, 161, 0.35) 0%,
+            transparent 70%
+          );
+      }
+      .login-hero:after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      /* Chips & tags */
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.8rem;
+      }
+
+      /* Note item */
+      .note {
+        position: relative;
+        overflow: hidden;
+      }
+      .note:hover {
+        transform: translateY(-2px);
+        transition: transform 0.2s ease;
+      }
+      .note h4 {
+        margin: 0 0 10px 0;
+      }
+      .note .meta {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+      .note .tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+
+      /* Animations */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fadeUp {
+        animation: fadeUp 0.5s ease both;
+      }
+
+      /* Footer */
+      footer {
+        color: var(--muted);
+        font-size: 0.9rem;
+        padding: 30px 0 50px;
+      }
+
+      /* Toast */
+      .toast {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 50;
+      }
+      .toast .msg {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- App Bar -->
+    <div class="appbar hidden" id="appbar">
+      <div class="inner container">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <div class="title">Rangkuman TKJ</div>
+            <div style="font-size: 0.82rem; color: var(--muted)">
+              Simpan & kelola rangkuman materi
+            </div>
+          </div>
+        </div>
+        <div class="row" style="align-items: center">
+          <div class="chip" id="userChip">👤 <span id="userName">—</span></div>
+          <button class="btn ghost small" id="exportBtn">⬇️ Ekspor</button>
+          <label
+            class="btn ghost small"
+            for="importFile"
+            style="cursor: pointer"
+            >⬆️ Impor</label
+          >
+          <input
+            id="importFile"
+            type="file"
+            accept="application/json"
+            style="display: none"
+          />
+          <button class="btn danger small" id="logoutBtn">Keluar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGIN -->
+    <main class="center" id="loginPage">
+      <div class="card login-card fadeUp">
+        <div class="login-hero"></div>
+        <div class="body">
+          <h2 style="margin: 6px 0 6px">Masuk</h2>
+          <p style="margin: 0 0 16px; color: var(--muted); font-size: 0.95rem">
+            Gunakan akun bawaan atau buat akun lokal.
+          </p>
+          <div class="row">
+            <div style="flex: 1">
+              <label>Username</label>
+              <input
+                class="input"
+                id="loginUser"
+                placeholder="kevinnxyunus"
+                autocomplete="username"
+              />
+            </div>
+            <div style="flex: 1">
+              <label>Password</label>
+              <input
+                class="input"
+                id="loginPass"
+                placeholder="••••••••"
+                type="password"
+                autocomplete="current-password"
+              />
+            </div>
+          </div>
+          <div
+            class="row"
+            style="justify-content: space-between; gap: 10px; margin-top: 12px"
+          >
+            <button class="btn ghost" id="seedBtn">Gunakan Akun Bawaan</button>
+            <div style="display: flex; gap: 10px">
+              <button class="btn" id="loginBtn">Masuk</button>
+              <button class="btn warn" id="registerBtn">Daftar</button>
+            </div>
+          </div>
+          <div
+            id="loginInfo"
+            style="margin-top: 12px; color: var(--muted); font-size: 0.92rem"
+          ></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- APP -->
+    <section class="hidden" id="app">
+      <div class="container">
+        <!-- Toolbar Create -->
+        <div class="card fadeUp">
+          <div class="head">
+            <strong>Tambah Rangkuman</strong>
+            <div class="chip">🗂️ <span id="countSpan">0</span> catatan</div>
+          </div>
+          <div class="body">
+            <div class="row">
+              <div style="flex: 1 1 220px">
+                <label>Judul</label>
+                <input
+                  class="input"
+                  id="title"
+                  placeholder="Masukkan judul materi disini"
+                />
+              </div>
+              <div style="flex: 1 1 180px">
+                <label>Jenis Rangkuman</label>
+                <select id="subject">
+                  <option>Materi</option>
+                  <option>Teori</option>
+                  <option>Praktik</option>
+                </select>
+              </div>
+              <div style="flex: 1 1 180px">
+                <label>Tanggal</label>
+                <input class="input" id="date" type="date" />
+              </div>
+            </div>
+            <div class="row">
+              <div style="flex: 1 1 60%">
+                <label>Rangkuman</label>
+                <textarea
+                  id="content"
+                  placeholder="Tulis rangkuman materi disini jon"
+                ></textarea>
+              </div>
+              <div style="flex: 1 1 40%">
+                <label>Poin Penting (Garis Besar)</label>
+                <input
+                  class="input"
+                  id="tags"
+                  placeholder="cnth: jaringan, protokol, tcp/ip"
+                />
+                <label style="margin-top: 12px"
+                  >Link Referensi (Opsional)</label
+                >
+                <input class="input" id="ref" placeholder="https://…" />
+                <div class="row" style="margin-top: 12px; gap: 10px">
+                  <button class="btn primary" id="saveBtn">Simpan</button>
+                  <button class="btn ghost" id="clearBtn">Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="row" style="margin: 16px 0" id="filters">
+          <div class="card" style="flex: 1">
+            <div class="body row" style="align-items: end">
+              <div style="flex: 2 1 360px">
+                <label>Cari</label>
+                <input
+                  class="input"
+                  id="search"
+                  placeholder="Cari judul, isi, atau tag…"
+                />
+              </div>
+              <div style="flex: 1 1 180px">
+                <label>Filter Jenis Rangkuman</label>
+                <select id="fSubject">
+                  <option value="">Semua</option>
+                  <option>Materi</option>
+                  <option>Teori</option>
+                  <option>Praktik</option>
+                </select>
+              </div>
+              <div style="flex: 1 1 160px">
+                <label>Urutkan</label>
+                <select id="sortBy">
+                  <option value="new">Terbaru</option>
+                  <option value="old">Terlama</option>
+                  <option value="az">Judul A→Z</option>
+                  <option value="za">Judul Z→A</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <button class="btn ghost" id="printBtn" title="Cetak / Simpan PDF">
+            🖨️ Cetak
+          </button>
+        </div>
+
+        <!-- Notes List -->
+        <div class="grid grid-3" id="list"></div>
+
+        <footer class="container">
+          Dibuat untuk membantu siswa TKJ menyimpan catatan belajar. Data
+          disimpan lokal di perangkat ini.
+        </footer>
+      </div>
+    </section>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+      (function () {
+        const $ = (sel) => document.querySelector(sel);
+        const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+        const LS_KEY = "tkj-notes-v1";
+        const USERS_KEY = "tkj-users-v1";
+        const ACTIVE_KEY = "tkj-active-user";
+
+        const appbar = $("#appbar");
+        const loginPage = $("#loginPage");
+        const app = $("#app");
+        const list = $("#list");
+        const countSpan = $("#countSpan");
+        const toastBox = $("#toast");
+
+        // --- Utilities ---
+        const toast = (msg) => {
+          const el = document.createElement("div");
+          el.className = "card msg";
+          el.innerHTML = `<div class="body">${msg}</div>`;
+          toastBox.appendChild(el);
+          setTimeout(() => {
+            el.remove();
+          }, 2600);
+        };
+        const nowISO = () => new Date().toISOString().slice(0, 10);
+        $("#date").value = nowISO();
+
+        const getUsers = () =>
+          JSON.parse(localStorage.getItem(USERS_KEY) || "{}");
+        const setUsers = (obj) =>
+          localStorage.setItem(USERS_KEY, JSON.stringify(obj));
+        const getActiveUser = () => localStorage.getItem(ACTIVE_KEY);
+        const setActiveUser = (u) => localStorage.setItem(ACTIVE_KEY, u);
+
+        const getAll = () => JSON.parse(localStorage.getItem(LS_KEY) || "{}");
+        const saveAll = (data) =>
+          localStorage.setItem(LS_KEY, JSON.stringify(data));
+        const userData = () => {
+          const u = getActiveUser();
+          const all = getAll();
+          return [u, all[u] || []];
+        };
+        const writeUserData = (arr) => {
+          const u = getActiveUser();
+          const all = getAll();
+          all[u] = arr;
+          saveAll(all);
+        };
+
+        const renderUser = () =>
+          ($("#userName").textContent = getActiveUser() || "—");
+
+        // --- Auth ---
+        const loginInfo = $("#loginInfo");
+        const login = (username, password) => {
+          const users = getUsers();
+          if (users[username] && users[username].password === password) {
+            setActiveUser(username);
+            loginPage.classList.add("hidden");
+            app.classList.remove("hidden");
+            appbar.classList.remove("hidden");
+            renderUser();
+            renderList();
+            toast("Berhasil masuk. Selamat belajar!");
+          } else {
+            loginInfo.textContent = "Username atau password salah.";
+          }
+        };
+
+        $("#seedBtn").addEventListener("click", () => {
+          $("#loginUser").value = "tkjpaulus";
+          $("#loginPass").value = "tkjpaulus";
+          toast("Gunakan kredensial bawaan lalu klik Masuk");
+        });
+
+        $("#loginBtn").addEventListener("click", () => {
+          login($("#loginUser").value.trim(), $("#loginPass").value);
+        });
+        $("#registerBtn").addEventListener("click", () => {
+          const u = $("#loginUser").value.trim();
+          const p = $("#loginPass").value;
+          if (u.length < 3 || p.length < 6) {
+            loginInfo.textContent =
+              "Minimal username 3 karakter & password 6 karakter.";
+            return;
+          }
+          const users = getUsers();
+          if (users[u]) {
+            loginInfo.textContent = "Username sudah dipakai.";
+            return;
+          }
+          users[u] = { password: p, createdAt: Date.now() };
+          setUsers(users);
+          toast("Akun dibuat. Silakan masuk.");
+        });
+
+        // Init default user (bawaan)
+        (function seedDefault() {
+          const users = getUsers();
+          if (!users["tkjpaulus"]) {
+            users["tkjpaulus"] = {
+              password: "tkjpaulus",
+              createdAt: Date.now(),
+            };
+            setUsers(users);
+          }
+        })();
+
+        $("#logoutBtn").addEventListener("click", () => {
+          localStorage.removeItem(ACTIVE_KEY);
+          app.classList.add("hidden");
+          appbar.classList.add("hidden");
+          loginPage.classList.remove("hidden");
+          toast("Anda telah keluar.");
+        });
+
+        // --- CRUD Notes ---
+        const saveBtn = $("#saveBtn");
+        const clearBtn = $("#clearBtn");
+        const title = $("#title");
+        const subject = $("#subject");
+        const date = $("#date");
+        const content = $("#content");
+        const tags = $("#tags");
+        const ref = $("#ref");
+
+        saveBtn.addEventListener("click", () => {
+          if (!title.value.trim() || !content.value.trim()) {
+            toast("Judul dan rangkuman wajib diisi.");
+            return;
+          }
+          const [user, items] = userData();
+          const id = crypto.randomUUID();
+          items.unshift({
+            id,
+            title: title.value.trim(),
+            subject: subject.value,
+            date: date.value || nowISO(),
+            content: content.value.trim(),
+            tags: tags.value
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean),
+            ref: ref.value.trim(),
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          });
+          writeUserData(items);
+          renderList();
+          clearForm();
+          toast("Rangkuman disimpan.");
+        });
+        clearBtn.addEventListener("click", clearForm);
+        function clearForm() {
+          title.value = "";
+          content.value = "";
+          tags.value = "";
+          ref.value = "";
+          date.value = nowISO();
+        }
+
+        function noteHTML(n) {
+          const tagHTML = (n.tags || [])
+            .map((t) => `<span class="chip">#${t}</span>`)
+            .join(" ");
+          const refHTML = n.ref
+            ? `<a href="${n.ref}" target="_blank" rel="noopener">🔗 Referensi</a>`
+            : "";
+          return `
+    <article class="card note fadeUp" data-id="${n.id}">
+      <div class="head">
+        <h4>${escapeHTML(n.title)}</h4>
+        <div class="row">
+          <button class="btn ghost small" data-act="edit">✏️ Edit</button>
+          <button class="btn danger small" data-act="del">🗑️ Hapus</button>
+        </div>
+      </div>
+      <div class="body">
+        <div class="meta">${n.subject} • ${n.date}</div>
+        <div>${formatContent(n.content)}</div>
+        <div class="tags">${tagHTML}</div>
+        <div style="margin-top:10px">${refHTML}</div>
+      </div>
+    </article>`;
+        }
+
+        function renderList() {
+          const [u, items] = userData();
+          const q = $("#search").value.toLowerCase();
+          const fs = $("#fSubject").value;
+          const sortBy = $("#sortBy").value;
+          let arr = items.slice();
+          if (q) {
+            arr = arr.filter((n) =>
+              (n.title + " " + n.content + " " + (n.tags || []).join(" "))
+                .toLowerCase()
+                .includes(q)
+            );
+          }
+          if (fs) {
+            arr = arr.filter((n) => n.subject === fs);
+          }
+          if (sortBy === "new") arr.sort((a, b) => b.createdAt - a.createdAt);
+          if (sortBy === "old") arr.sort((a, b) => a.createdAt - b.createdAt);
+          if (sortBy === "az")
+            arr.sort((a, b) => a.title.localeCompare(b.title));
+          if (sortBy === "za")
+            arr.sort((a, b) => b.title.localeCompare(a.title));
+
+          list.innerHTML = arr.map(noteHTML).join("");
+          countSpan.textContent = items.length;
+        }
+
+        // Delegated actions (edit & delete)
+        list.addEventListener("click", (e) => {
+          const btn = e.target.closest("button");
+          if (!btn) return;
+          const card = e.target.closest(".note");
+          if (!card) return;
+          const id = card.dataset.id;
+          const [u, items] = userData();
+          const idx = items.findIndex((n) => n.id === id);
+          if (idx < 0) return;
+          if (btn.dataset.act === "del") {
+            if (confirm("Hapus rangkuman ini?")) {
+              items.splice(idx, 1);
+              writeUserData(items);
+              renderList();
+              toast("Dihapus.");
+            }
+          }
+          if (btn.dataset.act === "edit") {
+            const n = items[idx];
+            title.value = n.title;
+            subject.value = n.subject;
+            date.value = n.date;
+            content.value = n.content;
+            tags.value = (n.tags || []).join(", ");
+            ref.value = n.ref || "";
+            // replace with update on next save
+            items.splice(idx, 1);
+            writeUserData(items);
+            renderList();
+            toast("Mode edit aktif. Setelah ubah, klik Simpan.");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        });
+
+        // Filters listeners
+        ["search", "fSubject", "sortBy"].forEach((id) =>
+          $("#" + id).addEventListener("input", renderList)
+        );
+
+        // Export / Import / Print
+        $("#exportBtn").addEventListener("click", () => {
+          const data = getAll();
+          const blob = new Blob([JSON.stringify(data, null, 2)], {
+            type: "application/json",
+          });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "rangkuman-tkj.json";
+          a.click();
+          URL.revokeObjectURL(a.href);
+          toast("Data diekspor.");
+        });
+        $("#importFile").addEventListener("change", (ev) => {
+          const file = ev.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            try {
+              const obj = JSON.parse(reader.result);
+              if (typeof obj === "object") {
+                localStorage.setItem(LS_KEY, JSON.stringify(obj));
+                renderList();
+                toast("Data berhasil diimpor.");
+              } else throw new Error("Format tidak valid");
+            } catch (err) {
+              alert("Gagal impor: " + err.message);
+            }
+          };
+          reader.readAsText(file);
+        });
+        $("#printBtn").addEventListener("click", () => window.print());
+
+        // Content formatting (mini markdown: **bold**, `code`, - list)
+        function formatContent(t) {
+          let s = escapeHTML(t)
+            .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+            .replace(
+              /`([^`]+)`/g,
+              '<code style="background:rgba(255,255,255,.08);padding:2px 6px;border-radius:8px">$1</code>'
+            );
+          s = s.replace(/^\s*-\s+(.+)$/gm, "• $1");
+          return s.replace(/\n/g, "<br>");
+        }
+        function escapeHTML(str) {
+          return str.replace(
+            /[&<>"]/g,
+            (c) =>
+              ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])
+          );
+        }
+
+        // Auto-login if active user exists
+        const active = getActiveUser();
+        if (active) {
+          login(active, getUsers()[active]?.password || "");
+        }
+      })();
+    </script>
+  </body>
+</html>
